@@ -35,6 +35,11 @@ namespace perfmon_explorer.PerfMon
             perfCount = inner;
         }
 
+        public string Help
+        {
+            get { return perfCount.CounterHelp; }
+        }
+
         public override string ToString()
         {
             return perfCount.CounterName;

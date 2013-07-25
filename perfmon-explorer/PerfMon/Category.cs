@@ -35,6 +35,11 @@ namespace perfmon_explorer.PerfMon
             perfCat = inner;
         }
 
+        public string Help
+        {
+            get { return perfCat.CategoryHelp; }
+        }
+
         public string[] GetInstancesNames()
         {
             return perfCat.GetInstanceNames();

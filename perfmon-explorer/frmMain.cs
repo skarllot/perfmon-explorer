@@ -54,9 +54,13 @@ namespace perfmon_explorer
 
             lstInstances.Items.Clear();
             lstCounters.Items.Clear();
+            txtHelpCounter.Text = string.Empty;
+            btnGetValue.Enabled = false;
+            lstValue.Items.Clear();
 
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
             lstInstances.Items.AddRange(cat.GetInstancesNames());
+            txtHelpCategory.Text = cat.Help;
 
             if (lstInstances.Items.Count == 0)
             {
@@ -75,6 +79,9 @@ namespace perfmon_explorer
             frm.Show(this);
 
             lstCounters.Items.Clear();
+            txtHelpCounter.Text = string.Empty;
+            btnGetValue.Enabled = false;
+            lstValue.Items.Clear();
 
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
 
@@ -88,6 +95,12 @@ namespace perfmon_explorer
 
         private void lstCounters_SelectedIndexChanged(object sender, EventArgs e)
         {
+            PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
+            txtHelpCounter.Text = counter.Help;
+
+            btnGetValue.Enabled = true;
+            lstValue.Items.Clear();
+
             UpdatePaths();
         }
 
