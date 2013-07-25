@@ -30,15 +30,15 @@
         {
             this.lstCategory = new System.Windows.Forms.ListBox();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.lstCounters = new System.Windows.Forms.ListBox();
             this.lstInstances = new System.Windows.Forms.ListBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtZabbixPath = new System.Windows.Forms.TextBox();
+            this.txtPath = new System.Windows.Forms.TextBox();
             this.lblZabbixPath = new System.Windows.Forms.Label();
             this.lblPath = new System.Windows.Forms.Label();
-            this.txtPath = new System.Windows.Forms.TextBox();
-            this.txtZabbixPath = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.txtHelpCategory = new System.Windows.Forms.TextBox();
             this.txtHelpCounter = new System.Windows.Forms.TextBox();
             this.tlpValue = new System.Windows.Forms.TableLayoutPanel();
@@ -76,6 +76,23 @@
             this.tlpMain.Size = new System.Drawing.Size(484, 562);
             this.tlpMain.TabIndex = 1;
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Controls.Add(this.lstCounters, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.lstCategory, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lstInstances, 0, 1);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(211, 556);
+            this.tableLayoutPanel2.TabIndex = 4;
+            // 
             // lstCounters
             // 
             this.lstCounters.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -96,23 +113,6 @@
             this.lstInstances.TabIndex = 2;
             this.lstInstances.SelectedIndexChanged += new System.EventHandler(this.lstInstances_SelectedIndexChanged);
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.lstCounters, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.lstCategory, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lstInstances, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(211, 556);
-            this.tableLayoutPanel2.TabIndex = 4;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -131,6 +131,44 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(261, 556);
             this.tableLayoutPanel1.TabIndex = 5;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.txtZabbixPath, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.txtPath, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.lblZabbixPath, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lblPath, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(255, 54);
+            this.tableLayoutPanel3.TabIndex = 10;
+            // 
+            // txtZabbixPath
+            // 
+            this.txtZabbixPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtZabbixPath.Location = new System.Drawing.Point(83, 30);
+            this.txtZabbixPath.Name = "txtZabbixPath";
+            this.txtZabbixPath.ReadOnly = true;
+            this.txtZabbixPath.Size = new System.Drawing.Size(169, 20);
+            this.txtZabbixPath.TabIndex = 7;
+            this.txtZabbixPath.DoubleClick += new System.EventHandler(this.txtReadOnly_DoubleClick);
+            // 
+            // txtPath
+            // 
+            this.txtPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPath.Location = new System.Drawing.Point(83, 3);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.ReadOnly = true;
+            this.txtPath.Size = new System.Drawing.Size(169, 20);
+            this.txtPath.TabIndex = 6;
+            this.txtPath.DoubleClick += new System.EventHandler(this.txtReadOnly_DoubleClick);
             // 
             // lblZabbixPath
             // 
@@ -152,42 +190,6 @@
             this.lblPath.TabIndex = 4;
             this.lblPath.Text = "Path:";
             // 
-            // txtPath
-            // 
-            this.txtPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPath.Location = new System.Drawing.Point(83, 3);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(169, 20);
-            this.txtPath.TabIndex = 6;
-            // 
-            // txtZabbixPath
-            // 
-            this.txtZabbixPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtZabbixPath.Location = new System.Drawing.Point(83, 30);
-            this.txtZabbixPath.Name = "txtZabbixPath";
-            this.txtZabbixPath.ReadOnly = true;
-            this.txtZabbixPath.Size = new System.Drawing.Size(169, 20);
-            this.txtZabbixPath.TabIndex = 7;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.txtZabbixPath, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.txtPath, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.lblZabbixPath, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.lblPath, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(255, 54);
-            this.tableLayoutPanel3.TabIndex = 10;
-            // 
             // txtHelpCategory
             // 
             this.txtHelpCategory.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -198,6 +200,7 @@
             this.txtHelpCategory.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtHelpCategory.Size = new System.Drawing.Size(255, 93);
             this.txtHelpCategory.TabIndex = 13;
+            this.txtHelpCategory.DoubleClick += new System.EventHandler(this.txtReadOnly_DoubleClick);
             // 
             // txtHelpCounter
             // 
@@ -209,6 +212,7 @@
             this.txtHelpCounter.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtHelpCounter.Size = new System.Drawing.Size(255, 94);
             this.txtHelpCounter.TabIndex = 14;
+            this.txtHelpCounter.DoubleClick += new System.EventHandler(this.txtReadOnly_DoubleClick);
             // 
             // tlpValue
             // 
