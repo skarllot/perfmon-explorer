@@ -65,6 +65,7 @@ namespace perfmon_explorer
                 lstCounters.Items.AddRange(counters);
             }
 
+            UpdatePaths();
             frm.Close();
         }
 
@@ -81,7 +82,46 @@ namespace perfmon_explorer
             Array.Sort(counters);
             lstCounters.Items.AddRange(counters);
 
+            UpdatePaths();
             frm.Close();
+        }
+
+        private void lstCounters_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdatePaths();
+        }
+
+        private void UpdatePaths()
+        {
+            txtPath.Text = string.Empty;
+            txtZabbixPath.Text = string.Empty;
+
+            if (lstCategory.SelectedIndex != -1)
+            {
+                PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
+
+                txtPath.Text = "\\" + cat.ToString();
+                txtZabbixPath.Text = "\\" + (PerfMon.Localization.GetId(cat.ToString()) ?? "?");
+            }
+
+            if (lstInstances.SelectedIndex != -1)
+            {
+                txtPath.Text += "(" + (string)lstInstances.SelectedItem + ")";
+                txtZabbixPath.Text += "(" + (string)lstInstances.SelectedItem + ")";
+            }
+
+            if (lstCounters.SelectedIndex != -1)
+            {
+                PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
+
+                txtPath.Text += "\\" + counter.ToString();
+                txtZabbixPath.Text += "\\" + (PerfMon.Localization.GetId(counter.ToString()) ?? "?");
+            }
+        }
+
+        private void txtReadOnly_DoubleClick(object sender, EventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
         }
     }
 }

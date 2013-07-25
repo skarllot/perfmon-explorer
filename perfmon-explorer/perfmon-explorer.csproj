@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>perfmon_analyser.Program</StartupObject>
+    <StartupObject>perfmon_explorer.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="PerfMon\Category.cs" />
     <Compile Include="PerfMon\Counter.cs" />
+    <Compile Include="PerfMon\Localization.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmLoading.resx">
