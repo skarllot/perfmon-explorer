@@ -136,5 +136,12 @@ namespace perfmon_explorer
         {
             ((TextBox)sender).SelectAll();
         }
+
+        private void btnGetValue_Click(object sender, EventArgs e)
+        {
+            PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
+            string item = counter.RawValue.ToString() + " - " + counter.NextValue().ToString();
+            lstValue.Items.Insert(0, item);
+        }
     }
 }

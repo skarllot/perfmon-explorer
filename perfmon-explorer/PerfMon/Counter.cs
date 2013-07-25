@@ -35,9 +35,19 @@ namespace perfmon_explorer.PerfMon
             perfCount = inner;
         }
 
+        public long RawValue
+        {
+            get { return perfCount.RawValue; }
+        }
+
         public string Help
         {
             get { return perfCount.CounterHelp; }
+        }
+
+        public float NextValue()
+        {
+            return perfCount.NextValue();
         }
 
         public override string ToString()

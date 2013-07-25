@@ -238,6 +238,7 @@
             this.btnGetValue.TabIndex = 0;
             this.btnGetValue.Text = "Get Value";
             this.btnGetValue.UseVisualStyleBackColor = true;
+            this.btnGetValue.Click += new System.EventHandler(this.btnGetValue_Click);
             // 
             // lstValue
             // 
