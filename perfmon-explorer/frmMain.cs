@@ -39,6 +39,7 @@ namespace perfmon_explorer
         {
             frmLoading frm = new frmLoading();
             frm.Show(this);
+            frm.Update();
 
             PerfMon.Category[] categories = PerfMon.Category.GetCategories();
             Array.Sort(categories);
@@ -51,6 +52,7 @@ namespace perfmon_explorer
         {
             frmLoading frm = new frmLoading();
             frm.Show(this);
+            frm.Update();
 
             lstInstances.Items.Clear();
             lstCounters.Items.Clear();
@@ -77,6 +79,7 @@ namespace perfmon_explorer
         {
             frmLoading frm = new frmLoading();
             frm.Show(this);
+            frm.Update();
 
             lstCounters.Items.Clear();
             txtHelpCounter.Text = string.Empty;
