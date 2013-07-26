@@ -96,6 +96,7 @@
     <Compile Include="PerfMon\Localization.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AsyncCookie.cs" />
     <EmbeddedResource Include="frmLoading.resx">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </EmbeddedResource>

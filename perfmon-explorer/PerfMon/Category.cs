@@ -20,9 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
+using System.Threading;
 
 namespace perfmon_explorer.PerfMon
 {
@@ -40,22 +39,79 @@ namespace perfmon_explorer.PerfMon
             get { return perfCat.CategoryHelp; }
         }
 
-        public string[] GetInstancesNames()
+        public static IAsyncResult BeginGetCategories()
         {
-            return perfCat.GetInstanceNames();
+            ParameterizedThreadStart thStart = new ParameterizedThreadStart(_getCategories);
+            Thread th = new Thread(thStart);
+            AsyncState<object, Category[]> state = new AsyncState<object, Category[]>(th);
+            th.Start(state);
+
+            return new AsyncCookie(state);
+        }
+
+        public IAsyncResult BeginGetCounters(string instance)
+        {
+            ParameterizedThreadStart thStart = new ParameterizedThreadStart(_getCounters);
+            Thread th = new Thread(thStart);
+            AsyncState<string, Counter[]> state = new AsyncState<string, Counter[]>(th, instance);
+            th.Start(state);
+
+            return new AsyncCookie(state);
+        }
+
+        public IAsyncResult BeginGetInstancesNames()
+        {
+            ParameterizedThreadStart thStart = new ParameterizedThreadStart(_getInstancesNames);
+            Thread th = new Thread(thStart);
+            AsyncState<object, string[]> state = new AsyncState<object, string[]>(th);
+            th.Start(state);
+
+            return new AsyncCookie(state);
+        }
+
+        public static Category[] EndGetCategories(IAsyncResult asyncResult)
+        {
+            AsyncState<object, Category[]> state = (AsyncState<object, Category[]>)asyncResult.AsyncState;
+            state.Thread.Join();
+
+            return state.Result;
+        }
+
+        public Counter[] EndGetCounters(IAsyncResult asyncResult)
+        {
+            AsyncState<string, Counter[]> state = (AsyncState<string, Counter[]>)asyncResult.AsyncState;
+            state.Thread.Join();
+
+            return state.Result;
+        }
+
+        public string[] EndGetInstancesNames(IAsyncResult asyncResult)
+        {
+            AsyncState<object, string[]> state = (AsyncState<object, string[]>)asyncResult.AsyncState;
+            state.Thread.Join();
+
+            return state.Result;
+        }
+
+        public static Category[] GetCategories()
+        {
+            AsyncState<object, Category[]> state = new AsyncState<object, Category[]>(null);
+            _getCategories(state);
+            return state.Result;
         }
 
         public Counter[] GetCounters(string instance)
         {
-            PerformanceCounter[] counters = perfCat.GetCounters(instance ?? "");
-            Counter[] ret = new Counter[counters.Length];
+            AsyncState<string, Counter[]> state = new AsyncState<string, Counter[]>(null, instance);
+            _getCounters(state);
+            return state.Result;
+        }
 
-            for (int i = 0; i < ret.Length; i++)
-            {
-                ret[i] = new Counter(counters[i]);
-            }
-
-            return ret;
+        public string[] GetInstancesNames()
+        {
+            AsyncState<object, string[]> state = new AsyncState<object, string[]>(null);
+            _getInstancesNames(state);
+            return state.Result;
         }
 
         public override string ToString()
@@ -63,8 +119,15 @@ namespace perfmon_explorer.PerfMon
             return perfCat.CategoryName;
         }
 
-        public static Category[] GetCategories()
+        int IComparable.CompareTo(object obj)
         {
+            return this.perfCat.CategoryName.CompareTo(obj.ToString());
+        }
+
+        private static void _getCategories(object obj)
+        {
+            AsyncState<object, Category[]> state = (AsyncState<object, Category[]>)obj;
+
             PerformanceCounterCategory[] perfCats = PerformanceCounterCategory.GetCategories();
             Category[] ret = new Category[perfCats.Length];
 
@@ -73,12 +136,73 @@ namespace perfmon_explorer.PerfMon
                 ret[i] = new Category(perfCats[i]);
             }
 
-            return ret;
+            state.Result = ret;
         }
 
-        int IComparable.CompareTo(object obj)
+        private void _getCounters(object obj)
         {
-            return this.perfCat.CategoryName.CompareTo(obj.ToString());
+            AsyncState<string, Counter[]> state = (AsyncState<string, Counter[]>)obj;
+
+            PerformanceCounter[] counters = perfCat.GetCounters(state.Parameter ?? "");
+            Counter[] ret = new Counter[counters.Length];
+
+            for (int i = 0; i < ret.Length; i++)
+            {
+                ret[i] = new Counter(counters[i]);
+            }
+
+            state.Result = ret;
+        }
+
+        private void _getInstancesNames(object obj)
+        {
+            AsyncState<object, string[]> state = (AsyncState<object, string[]>)obj;
+            state.Result = perfCat.GetInstanceNames();
+        }
+
+        private class AsyncState<T, U> : AsyncCookie.IState
+            where T : class
+            where U : class
+        {
+            Thread thread;
+            T param;
+            U result;
+
+            public AsyncState(Thread thread)
+            {
+                this.thread = thread;
+                param = null;
+                result = null;
+            }
+
+            public AsyncState(Thread thread, T param)
+            {
+                this.thread = thread;
+                this.param = param;
+                result = null;
+            }
+
+            public T Parameter
+            {
+                get { return param; }
+            }
+
+            public Thread Thread
+            {
+                get { return thread; }
+                set { thread = value; }
+            }
+
+            public U Result
+            {
+                get { return result; }
+                set { result = value; }
+            }
+
+            bool AsyncCookie.IState.IsCompleted
+            {
+                get { return thread.ThreadState == System.Threading.ThreadState.Stopped; }
+            }
         }
     }
 }

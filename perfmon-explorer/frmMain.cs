@@ -39,9 +39,12 @@ namespace perfmon_explorer
         {
             frmLoading frm = new frmLoading();
             frm.Show(this);
-            frm.Update();
 
-            PerfMon.Category[] categories = PerfMon.Category.GetCategories();
+            IAsyncResult asyncResult = PerfMon.Category.BeginGetCategories();
+            while (!asyncResult.IsCompleted)
+                Application.DoEvents();
+
+            PerfMon.Category[] categories = PerfMon.Category.EndGetCategories(asyncResult);
             Array.Sort(categories);
             lstCategory.Items.AddRange(categories);
 
@@ -52,7 +55,6 @@ namespace perfmon_explorer
         {
             frmLoading frm = new frmLoading();
             frm.Show(this);
-            frm.Update();
 
             lstInstances.Items.Clear();
             lstCounters.Items.Clear();
@@ -61,12 +63,21 @@ namespace perfmon_explorer
             lstValue.Items.Clear();
 
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
-            lstInstances.Items.AddRange(cat.GetInstancesNames());
+
+            IAsyncResult asyncResult = cat.BeginGetInstancesNames();
+            while (!asyncResult.IsCompleted)
+                Application.DoEvents();
+
+            lstInstances.Items.AddRange(cat.EndGetInstancesNames(asyncResult));
             txtHelpCategory.Text = cat.Help;
 
             if (lstInstances.Items.Count == 0)
             {
-                PerfMon.Counter[] counters = cat.GetCounters(null);
+                asyncResult = cat.BeginGetCounters(null);
+                while (!asyncResult.IsCompleted)
+                    Application.DoEvents();
+
+                PerfMon.Counter[] counters = cat.EndGetCounters(asyncResult);
                 Array.Sort(counters);
                 lstCounters.Items.AddRange(counters);
             }
@@ -79,7 +90,6 @@ namespace perfmon_explorer
         {
             frmLoading frm = new frmLoading();
             frm.Show(this);
-            frm.Update();
 
             lstCounters.Items.Clear();
             txtHelpCounter.Text = string.Empty;
@@ -88,7 +98,11 @@ namespace perfmon_explorer
 
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
 
-            PerfMon.Counter[] counters = cat.GetCounters((string)lstInstances.SelectedItem);
+            IAsyncResult asyncResult = cat.BeginGetCounters((string)lstInstances.SelectedItem);
+            while (!asyncResult.IsCompleted)
+                Application.DoEvents();
+
+            PerfMon.Counter[] counters = cat.EndGetCounters(asyncResult);
             Array.Sort(counters);
             lstCounters.Items.AddRange(counters);
 
