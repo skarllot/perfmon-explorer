@@ -20,16 +20,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace perfmon_explorer
 {
     public partial class frmMain : Form
     {
+        PerfMon.CounterPath counterPath = new PerfMon.CounterPath();
+
         public frmMain()
         {
             InitializeComponent();
@@ -74,7 +72,10 @@ namespace perfmon_explorer
                 lstCounters.Items.AddRange(counters);
             }
 
-            UpdatePaths();
+            counterPath = new PerfMon.CounterPath();
+            counterPath.CategoryName = cat.ToString();
+            txtPath.Text = counterPath.GetPath();
+            txtZabbixPath.Text = counterPath.GetIdPath();
         }
 
         private void lstInstances_SelectedIndexChanged(object sender, EventArgs e)
@@ -85,8 +86,9 @@ namespace perfmon_explorer
             lstValue.Items.Clear();
 
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
+            string instance = (string)lstInstances.SelectedItem;
 
-            IAsyncResult asyncResult = cat.BeginGetCounters((string)lstInstances.SelectedItem);
+            IAsyncResult asyncResult = cat.BeginGetCounters(instance);
             frmLoading frm = new frmLoading(asyncResult);
             frm.ShowDialog(this);
 
@@ -94,7 +96,10 @@ namespace perfmon_explorer
             Array.Sort(counters);
             lstCounters.Items.AddRange(counters);
 
-            UpdatePaths();
+            counterPath.InstanceName = instance;
+            counterPath.CounterId = -1;
+            txtPath.Text = counterPath.GetPath();
+            txtZabbixPath.Text = counterPath.GetIdPath();
         }
 
         private void lstCounters_SelectedIndexChanged(object sender, EventArgs e)
@@ -105,35 +110,9 @@ namespace perfmon_explorer
             btnGetValue.Enabled = true;
             lstValue.Items.Clear();
 
-            UpdatePaths();
-        }
-
-        private void UpdatePaths()
-        {
-            txtPath.Text = string.Empty;
-            txtZabbixPath.Text = string.Empty;
-
-            if (lstCategory.SelectedIndex != -1)
-            {
-                PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
-
-                txtPath.Text = "\\" + cat.ToString();
-                txtZabbixPath.Text = "\\" + (PerfMon.Localization.GetId(cat.ToString()) ?? "?");
-            }
-
-            if (lstInstances.SelectedIndex != -1)
-            {
-                txtPath.Text += "(" + (string)lstInstances.SelectedItem + ")";
-                txtZabbixPath.Text += "(" + (string)lstInstances.SelectedItem + ")";
-            }
-
-            if (lstCounters.SelectedIndex != -1)
-            {
-                PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
-
-                txtPath.Text += "\\" + counter.ToString();
-                txtZabbixPath.Text += "\\" + (PerfMon.Localization.GetId(counter.ToString()) ?? "?");
-            }
+            counterPath.CounterName = counter.ToString();
+            txtPath.Text = counterPath.GetPath();
+            txtZabbixPath.Text = counterPath.GetIdPath();
         }
 
         private void txtReadOnly_DoubleClick(object sender, EventArgs e)
@@ -144,7 +123,7 @@ namespace perfmon_explorer
         private void btnGetValue_Click(object sender, EventArgs e)
         {
             PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
-            string item = counter.RawValue.ToString() + " - " + counter.NextValue().ToString();
+            string item = string.Format("{0} (Raw: {1})", counter.NextValue().ToString(), counter.RawValue.ToString());
             lstValue.Items.Insert(0, item);
         }
     }
