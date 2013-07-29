@@ -37,25 +37,17 @@ namespace perfmon_explorer
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            frmLoading frm = new frmLoading();
-            frm.Show(this);
-
             IAsyncResult asyncResult = PerfMon.Category.BeginGetCategories();
-            while (!asyncResult.IsCompleted)
-                Application.DoEvents();
+            frmLoading frm = new frmLoading(asyncResult);
+            frm.ShowDialog(this);
 
             PerfMon.Category[] categories = PerfMon.Category.EndGetCategories(asyncResult);
             Array.Sort(categories);
             lstCategory.Items.AddRange(categories);
-
-            frm.Close();
         }
 
         private void lstCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            frmLoading frm = new frmLoading();
-            frm.Show(this);
-
             lstInstances.Items.Clear();
             lstCounters.Items.Clear();
             txtHelpCounter.Text = string.Empty;
@@ -63,10 +55,10 @@ namespace perfmon_explorer
             lstValue.Items.Clear();
 
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
-
             IAsyncResult asyncResult = cat.BeginGetInstancesNames();
-            while (!asyncResult.IsCompleted)
-                Application.DoEvents();
+            frmLoading frm = new frmLoading(asyncResult);
+            frm.ShowDialog(this);
+            frm.Dispose();
 
             lstInstances.Items.AddRange(cat.EndGetInstancesNames(asyncResult));
             txtHelpCategory.Text = cat.Help;
@@ -74,8 +66,8 @@ namespace perfmon_explorer
             if (lstInstances.Items.Count == 0)
             {
                 asyncResult = cat.BeginGetCounters(null);
-                while (!asyncResult.IsCompleted)
-                    Application.DoEvents();
+                frm = new frmLoading(asyncResult);
+                frm.ShowDialog(this);
 
                 PerfMon.Counter[] counters = cat.EndGetCounters(asyncResult);
                 Array.Sort(counters);
@@ -83,14 +75,10 @@ namespace perfmon_explorer
             }
 
             UpdatePaths();
-            frm.Close();
         }
 
         private void lstInstances_SelectedIndexChanged(object sender, EventArgs e)
         {
-            frmLoading frm = new frmLoading();
-            frm.Show(this);
-
             lstCounters.Items.Clear();
             txtHelpCounter.Text = string.Empty;
             btnGetValue.Enabled = false;
@@ -99,15 +87,14 @@ namespace perfmon_explorer
             PerfMon.Category cat = (PerfMon.Category)lstCategory.SelectedItem;
 
             IAsyncResult asyncResult = cat.BeginGetCounters((string)lstInstances.SelectedItem);
-            while (!asyncResult.IsCompleted)
-                Application.DoEvents();
+            frmLoading frm = new frmLoading(asyncResult);
+            frm.ShowDialog(this);
 
             PerfMon.Counter[] counters = cat.EndGetCounters(asyncResult);
             Array.Sort(counters);
             lstCounters.Items.AddRange(counters);
 
             UpdatePaths();
-            frm.Close();
         }
 
         private void lstCounters_SelectedIndexChanged(object sender, EventArgs e)

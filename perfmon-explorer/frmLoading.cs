@@ -31,9 +31,24 @@ namespace perfmon_explorer
 {
     public partial class frmLoading : Form
     {
-        public frmLoading()
+        IAsyncResult asyncResult;
+
+        public frmLoading(IAsyncResult asyncResult)
         {
+            this.asyncResult = asyncResult;
             InitializeComponent();
+        }
+
+        private void frmLoading_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!asyncResult.IsCompleted)
+                e.Cancel = true;
+        }
+
+        private void frmLoading_Paint(object sender, PaintEventArgs e)
+        {
+            if (asyncResult.IsCompleted)
+                this.Close();
         }
     }
 }
