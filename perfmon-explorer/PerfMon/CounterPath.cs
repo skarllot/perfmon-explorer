@@ -21,7 +21,6 @@
 
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 
 namespace perfmon_explorer.PerfMon
 {
