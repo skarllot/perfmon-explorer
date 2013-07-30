@@ -26,6 +26,10 @@ namespace perfmon_explorer
 {
     public partial class frmMain : Form
     {
+        int lastIdxCategory = -1;
+        int lastIdxInstance = -1;
+        int lastIdxCounter = -1;
+
         PerfMon.CounterPath counterPath = new PerfMon.CounterPath();
 
         public frmMain()
@@ -46,6 +50,13 @@ namespace perfmon_explorer
 
         private void lstCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (lstCategory.SelectedIndex == -1 ||
+                lstCategory.SelectedIndex == lastIdxCategory)
+                return;
+
+            lastIdxCategory = lstCategory.SelectedIndex;
+            lastIdxInstance = -1;
+            lastIdxCounter = -1;
             lstInstances.Items.Clear();
             lstCounters.Items.Clear();
             txtHelpCounter.Text = string.Empty;
@@ -82,6 +93,12 @@ namespace perfmon_explorer
 
         private void lstInstances_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (lstInstances.SelectedIndex == -1 ||
+                lstInstances.SelectedIndex == lastIdxInstance)
+                return;
+
+            lastIdxInstance = lstInstances.SelectedIndex;
+            lastIdxCounter = -1;
             lstCounters.Items.Clear();
             txtHelpCounter.Text = string.Empty;
             btnGetValue.Enabled = false;
@@ -106,6 +123,11 @@ namespace perfmon_explorer
 
         private void lstCounters_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (lstCounters.SelectedIndex == -1 ||
+                lstCounters.SelectedIndex == lastIdxCounter)
+                return;
+
+            lastIdxCounter = lstCounters.SelectedIndex;
             PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
             txtHelpCounter.Text = counter.Help;
 
