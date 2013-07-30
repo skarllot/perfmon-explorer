@@ -40,10 +40,13 @@ namespace perfmon_explorer
                 e.Cancel = true;
         }
 
-        private void frmLoading_Paint(object sender, PaintEventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
             if (asyncResult.IsCompleted)
-                this.Close();
+            {
+                timer1.Enabled = false;
+                this.Invoke(new MethodInvoker(this.Close));
+            }
         }
     }
 }
