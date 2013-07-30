@@ -58,7 +58,9 @@ namespace perfmon_explorer
             frm.ShowDialog(this);
             frm.Dispose();
 
-            lstInstances.Items.AddRange(cat.EndGetInstancesNames(asyncResult));
+            string[] instances = cat.EndGetInstancesNames(asyncResult);
+            Array.Sort(instances);
+            lstInstances.Items.AddRange(instances);
             txtHelpCategory.Text = cat.Help;
 
             if (lstInstances.Items.Count == 0)
@@ -123,7 +125,17 @@ namespace perfmon_explorer
         private void btnGetValue_Click(object sender, EventArgs e)
         {
             PerfMon.Counter counter = (PerfMon.Counter)lstCounters.SelectedItem;
-            string item = string.Format("{0} (Raw: {1})", counter.NextValue().ToString(), counter.RawValue.ToString());
+            float? nValue = float.NaN;
+            long? rValue = long.MinValue;
+
+            try { nValue = counter.NextValue(); }
+            catch { }
+            try { rValue = counter.RawValue; }
+            catch { }
+
+            string item = string.Format("{0} (Raw: {1})",
+                nValue.ToString(),
+                rValue == long.MinValue ? "NaN" : rValue.ToString());
             lstValue.Items.Insert(0, item);
         }
     }
