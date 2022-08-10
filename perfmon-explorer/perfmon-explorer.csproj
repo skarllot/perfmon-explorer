@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>perfmon_explorer</RootNamespace>
     <AssemblyName>perfmon-explorer</AssemblyName>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Description>Refer to https://github.com/skarllot/perfmon-explorer</Description>
+    <Copyright>2022 (c) Fabrício Godoy</Copyright>
     <SupportUrl>https://github.com/skarllot/perfmon-explorer/issues</SupportUrl>
     <ProductName>PerfMon Explorer</ProductName>
     <PublisherName>Fabrício Godoy</PublisherName>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <StartupObject>perfmon_explorer.Program</StartupObject>
     <ApplicationIcon>appointment-soon.ico</ApplicationIcon>
   </PropertyGroup>
