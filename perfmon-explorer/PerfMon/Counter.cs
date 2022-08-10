@@ -40,7 +40,17 @@ namespace perfmon_explorer.PerfMon
 
         public string Help
         {
-            get { return perfCount.CounterHelp; }
+            get
+            {
+                try
+                {
+                    return perfCount.CounterHelp;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
         }
 
         public float NextValue()
