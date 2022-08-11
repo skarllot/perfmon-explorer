@@ -24,23 +24,13 @@ using System;
 
 namespace perfmon_explorer.PerfMon
 {
-    struct CounterPath
+    internal struct CounterPath
     {
-        #region Fields
-
-        const string KEY_PERFLIB_CURLANG = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\CurrentLanguage";
-        const string KEY_PERFLIB_DEFAULT = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\009";
-        const string SEPARATOR = @"&";
-        static int[] idListEn, idListLang;
-        static string[] nameListEn, nameListLang;
-
-        int categoryId;
-        string instanceName;
-        int counterId;
-
-        #endregion
-
-        #region Constructor
+        private const string KeyPerflibCurlang = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\CurrentLanguage";
+        private const string KeyPerflibDefault = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\009";
+        private const string Separator = @"&";
+        private static int[] idListEn, idListLang;
+        private static string[] nameListEn, nameListLang;
 
         static CounterPath()
         {
@@ -49,7 +39,7 @@ namespace perfmon_explorer.PerfMon
             int pos = 0;
 
             // TODO: Heavy test both keys
-            regKey = Registry.LocalMachine.OpenSubKey(KEY_PERFLIB_DEFAULT);
+            regKey = Registry.LocalMachine.OpenSubKey(KeyPerflibDefault);
 
             strCounter = regKey.GetValue("Counter") as string[];
             regKey.Close();
@@ -69,7 +59,7 @@ namespace perfmon_explorer.PerfMon
             }
 
             // Current Language
-            try { regKey = Registry.LocalMachine.OpenSubKey(KEY_PERFLIB_CURLANG); }
+            try { regKey = Registry.LocalMachine.OpenSubKey(KeyPerflibCurlang); }
             catch { return; }
 
             strCounter = regKey.GetValue("Counter") as string[];
@@ -91,62 +81,42 @@ namespace perfmon_explorer.PerfMon
             }
         }
 
-        #endregion
-
-        #region Properties
-
-        public int CategoryId
-        {
-            get { return categoryId; }
-            set { categoryId = value; }
-        }
+        public int CategoryId { get; set; }
 
         public string CategoryName
         {
-            get { return GetName(categoryId); }
-            set { categoryId = GetId(value); }
+            get { return GetName(CategoryId); }
+            set { CategoryId = GetId(value); }
         }
 
-        public int CounterId
-        {
-            get { return counterId; }
-            set { counterId = value; }
-        }
+        public int CounterId { get; set; }
 
         public string CounterName
         {
-            get { return GetName(counterId); }
-            set { counterId = GetNearestCounterId(GetAllIds(value)); }
+            get { return GetName(CounterId); }
+            set { CounterId = GetNearestCounterId(GetAllIds(value)); }
         }
 
-        public string InstanceName
+        public string InstanceName { get; set; }
+
+        private static int GetId(string name)
         {
-            get { return instanceName; }
-            set { instanceName = value; }
-        }
-
-        #endregion
-
-        #region Methods
-
-        static int GetId(string name)
-        {
-            int idx = Array.IndexOf<string>(nameListLang, name);
+            int idx = Array.IndexOf(nameListLang, name);
             if (idx != -1)
                 return idListLang[idx];
 
-            idx = Array.IndexOf<string>(nameListEn, name);
+            idx = Array.IndexOf(nameListEn, name);
             if (idx != -1)
                 return idListEn[idx];
 
             return 0;
         }
 
-        static int[] GetAllIds(string name)
+        private static int[] GetAllIds(string name)
         {
             int[] ids;
             int pos = 0;
-            int[] indexes = Utils.IndexOfAll<string>(nameListLang, name);
+            int[] indexes = Utils.IndexOfAll(nameListLang, name);
             if (indexes.Length > 0)
             {
                 ids = new int[indexes.Length];
@@ -158,7 +128,7 @@ namespace perfmon_explorer.PerfMon
                 return ids;
             }
 
-            indexes = Utils.IndexOfAll<string>(nameListEn, name);
+            indexes = Utils.IndexOfAll(nameListEn, name);
             if (indexes.Length > 0)
             {
                 ids = new int[indexes.Length];
@@ -177,35 +147,35 @@ namespace perfmon_explorer.PerfMon
         {
             string path = string.Empty;
 
-            if (categoryId > 0)
+            if (CategoryId > 0)
             {
-                path = "\\" + categoryId.ToString();
-                if (instanceName != null)
+                path = "\\" + CategoryId.ToString();
+                if (InstanceName != null)
                     path += "(" + InstanceName + ")";
-                if (counterId > 0)
+                if (CounterId > 0)
                     path += "\\" + CounterId.ToString();
             }
 
             return path;
         }
 
-        static string GetName(int id)
+        private static string GetName(int id)
         {
-            int idx = Array.IndexOf<int>(idListLang, id);
+            int idx = Array.IndexOf(idListLang, id);
             if (idx != -1)
                 return nameListLang[idx];
 
-            idx = Array.IndexOf<int>(idListEn, id);
+            idx = Array.IndexOf(idListEn, id);
             if (idx != -1)
                 return nameListEn[idx];
 
             return null;
         }
 
-        int GetNearestCounterId(int[] ids)
+        private int GetNearestCounterId(int[] ids)
         {
             if (ids == null ||
-                categoryId == 0 ||
+                CategoryId == 0 ||
                 ids.Length < 1)
                 return -1;
 
@@ -213,7 +183,7 @@ namespace perfmon_explorer.PerfMon
             int idx = -1, diff;
             for (int i = 0; i < ids.Length; i++)
             {
-                diff = Math.Abs(ids[i] - categoryId);
+                diff = Math.Abs(ids[i] - CategoryId);
                 if (diff < minor)
                 {
                     minor = diff;
@@ -228,12 +198,12 @@ namespace perfmon_explorer.PerfMon
         {
             string path = string.Empty;
 
-            if (categoryId > 0)
+            if (CategoryId > 0)
             {
                 path = "\\" + CategoryName;
-                if (instanceName != null)
+                if (InstanceName != null)
                     path += "(" + InstanceName + ")";
-                if (counterId > 0)
+                if (CounterId > 0)
                     path += "\\" + CounterName;
             }
 
@@ -244,7 +214,5 @@ namespace perfmon_explorer.PerfMon
         {
             return GetPath();
         }
-
-        #endregion
     }
 }

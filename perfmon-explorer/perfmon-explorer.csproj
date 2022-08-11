@@ -4,7 +4,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWpf>true</UseWpf>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>perfmon_explorer</RootNamespace>
     <AssemblyName>perfmon-explorer</AssemblyName>
@@ -13,7 +13,6 @@
     <SupportUrl>https://github.com/skarllot/perfmon-explorer/issues</SupportUrl>
     <ProductName>PerfMon Explorer</ProductName>
     <PublisherName>Fabrício Godoy</PublisherName>
-    <StartupObject>perfmon_explorer.Program</StartupObject>
     <ApplicationIcon>appointment-soon.ico</ApplicationIcon>
   </PropertyGroup>
 

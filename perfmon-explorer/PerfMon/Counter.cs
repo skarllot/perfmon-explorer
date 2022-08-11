@@ -24,9 +24,9 @@ using System.Diagnostics;
 
 namespace perfmon_explorer.PerfMon
 {
-    class Counter : IComparable
+    internal class Counter : IComparable
     {
-        PerformanceCounter perfCount;
+        private PerformanceCounter perfCount;
 
         internal Counter(PerformanceCounter inner)
         {
@@ -65,7 +65,7 @@ namespace perfmon_explorer.PerfMon
 
         int IComparable.CompareTo(object obj)
         {
-            return this.ToString().CompareTo(obj.ToString());
+            return string.CompareOrdinal(ToString(), obj.ToString());
         }
     }
 }

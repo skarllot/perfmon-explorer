@@ -21,11 +21,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Windows.Controls;
 
 namespace perfmon_explorer
 {
-    class Utils
+    internal static class Utils
     {
         public static int[] IndexOfAll<T>(T[] list, T item)
             where T : IComparable
@@ -38,6 +38,14 @@ namespace perfmon_explorer
             }
 
             return indexes.ToArray();
+        }
+
+        public static void AddRange(this ItemCollection collection, IEnumerable<object> items)
+        {
+            foreach (var item in items)
+            {
+                collection.Add(item);
+            }
         }
     }
 }
