@@ -38,11 +38,11 @@
         <Grid Column="0" Margin="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25" />
-                <RowDefinition Height="45*" />
+                <RowDefinition Height="4*" />
                 <RowDefinition Height="25" />
-                <RowDefinition Height="10*" />
+                <RowDefinition Height="1*" />
                 <RowDefinition Height="25" />
-                <RowDefinition Height="45*" />
+                <RowDefinition Height="3*" />
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Content="Categories" />
