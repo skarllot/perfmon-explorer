@@ -29,14 +29,14 @@ namespace perfmon_explorer.PerfMon
 {
     internal class Category : IComparable
     {
-        private PerformanceCounterCategory perfCat;
+        private readonly PerformanceCounterCategory perfCat;
 
         private Category(PerformanceCounterCategory inner)
         {
             perfCat = inner;
         }
 
-        public string Help
+        public string? Help
         {
             get
             {
@@ -56,7 +56,7 @@ namespace perfmon_explorer.PerfMon
             return Task.Run(GetCategories);
         }
 
-        public Task<IEnumerable<Counter>> GetCountersAsync(string instance)
+        public Task<IEnumerable<Counter>> GetCountersAsync(string? instance)
         {
             return Task.Run(() => GetCounters(instance));
         }
@@ -72,7 +72,7 @@ namespace perfmon_explorer.PerfMon
                 .Select(static it => new Category(it));
         }
 
-        private IEnumerable<Counter> GetCounters(string instance)
+        private IEnumerable<Counter> GetCounters(string? instance)
         {
             return perfCat.GetCounters(instance ?? "")
                 .Select(static it => new Counter(it));
@@ -88,9 +88,9 @@ namespace perfmon_explorer.PerfMon
             return perfCat.CategoryName;
         }
 
-        int IComparable.CompareTo(object obj)
+        int IComparable.CompareTo(object? obj)
         {
-            return string.CompareOrdinal(perfCat.CategoryName, obj.ToString());
+            return string.CompareOrdinal(perfCat.CategoryName, obj?.ToString());
         }
     }
 }

@@ -14,6 +14,7 @@
     <ProductName>PerfMon Explorer</ProductName>
     <PublisherName>Fabrício Godoy</PublisherName>
     <ApplicationIcon>appointment-soon.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>

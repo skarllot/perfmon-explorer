@@ -15,7 +15,7 @@ namespace perfmon_explorer
         private int lastIdxInstance = -1;
         private int lastIdxCounter = -1;
 
-        private PerfMon.CounterPath counterPath = new PerfMon.CounterPath();
+        private PerfMon.CounterPath counterPath;
 
         public MainWindow()
         {

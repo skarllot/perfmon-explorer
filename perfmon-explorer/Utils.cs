@@ -27,10 +27,10 @@ namespace perfmon_explorer
 {
     internal static class Utils
     {
-        public static int[] IndexOfAll<T>(T[] list, T item)
+        public static int[] IndexOfAll<T>(T[] list, T? item)
             where T : IComparable
         {
-            List<int> indexes = new List<int>();
+            var indexes = new List<int>();
             for (int i = 0; i < list.Length; i++)
             {
                 if (list[i].CompareTo(item) == 0)

@@ -28,24 +28,25 @@ namespace perfmon_explorer.PerfMon
     {
         private const string KeyPerflibCurlang = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\CurrentLanguage";
         private const string KeyPerflibDefault = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\009";
-        private const string Separator = @"&";
-        private static int[] idListEn, idListLang;
-        private static string[] nameListEn, nameListLang;
+        private static readonly int[] IdListEn = Array.Empty<int>();
+        private static readonly int[] IdListLang = Array.Empty<int>();
+        private static readonly string[] NameListEn = Array.Empty<string>();
+        private static readonly string[] NameListLang = Array.Empty<string>();
 
         static CounterPath()
         {
-            RegistryKey regKey;
-            string[] strCounter;
             int pos = 0;
 
             // TODO: Heavy test both keys
-            regKey = Registry.LocalMachine.OpenSubKey(KeyPerflibDefault);
+            var regKey = Registry.LocalMachine.OpenSubKey(KeyPerflibDefault);
+            if (regKey is null) return;
 
-            strCounter = regKey.GetValue("Counter") as string[];
+            var strCounter = regKey.GetValue("Counter") as string[];
             regKey.Close();
+            if (strCounter is null) return;
 
-            idListEn = new int[strCounter.Length / 2];
-            nameListEn = new string[strCounter.Length / 2];
+            IdListEn = new int[strCounter.Length / 2];
+            NameListEn = new string[strCounter.Length / 2];
             for (int i = 0; i < strCounter.Length; i += 2)
             {
                 if (string.IsNullOrEmpty(strCounter[i]) ||
@@ -53,8 +54,8 @@ namespace perfmon_explorer.PerfMon
                 {
                     continue;
                 }
-                idListEn[pos] = int.Parse(strCounter[i]);
-                nameListEn[pos] = strCounter[i + 1];
+                IdListEn[pos] = int.Parse(strCounter[i]);
+                NameListEn[pos] = strCounter[i + 1];
                 pos++;
             }
 
@@ -62,11 +63,14 @@ namespace perfmon_explorer.PerfMon
             try { regKey = Registry.LocalMachine.OpenSubKey(KeyPerflibCurlang); }
             catch { return; }
 
+            if (regKey is null) return;
+
             strCounter = regKey.GetValue("Counter") as string[];
             regKey.Close();
+            if (strCounter is null) return;
 
-            idListLang = new int[strCounter.Length / 2];
-            nameListLang = new string[strCounter.Length / 2];
+            IdListLang = new int[strCounter.Length / 2];
+            NameListLang = new string[strCounter.Length / 2];
             pos = 0;
             for (int i = 0; i < strCounter.Length; i += 2)
             {
@@ -75,72 +79,72 @@ namespace perfmon_explorer.PerfMon
                 {
                     continue;
                 }
-                idListLang[pos] = int.Parse(strCounter[i]);
-                nameListLang[pos] = strCounter[i + 1];
+                IdListLang[pos] = int.Parse(strCounter[i]);
+                NameListLang[pos] = strCounter[i + 1];
                 pos++;
             }
         }
 
         public int CategoryId { get; set; }
 
-        public string CategoryName
+        public string? CategoryName
         {
-            get { return GetName(CategoryId); }
-            set { CategoryId = GetId(value); }
+            get => GetName(CategoryId);
+            set => CategoryId = GetId(value);
         }
 
         public int CounterId { get; set; }
 
-        public string CounterName
+        public string? CounterName
         {
-            get { return GetName(CounterId); }
-            set { CounterId = GetNearestCounterId(GetAllIds(value)); }
+            get => GetName(CounterId);
+            set => CounterId = GetNearestCounterId(GetAllIds(value));
         }
 
         public string InstanceName { get; set; }
 
-        private static int GetId(string name)
+        private static int GetId(string? name)
         {
-            int idx = Array.IndexOf(nameListLang, name);
+            int idx = Array.IndexOf(NameListLang, name);
             if (idx != -1)
-                return idListLang[idx];
+                return IdListLang[idx];
 
-            idx = Array.IndexOf(nameListEn, name);
+            idx = Array.IndexOf(NameListEn, name);
             if (idx != -1)
-                return idListEn[idx];
+                return IdListEn[idx];
 
             return 0;
         }
 
-        private static int[] GetAllIds(string name)
+        private static int[] GetAllIds(string? name)
         {
             int[] ids;
             int pos = 0;
-            int[] indexes = Utils.IndexOfAll(nameListLang, name);
+            int[] indexes = Utils.IndexOfAll(NameListLang, name);
             if (indexes.Length > 0)
             {
                 ids = new int[indexes.Length];
                 foreach (int item in indexes)
                 {
-                    ids[pos] = idListLang[item];
+                    ids[pos] = IdListLang[item];
                     pos++;
                 }
                 return ids;
             }
 
-            indexes = Utils.IndexOfAll(nameListEn, name);
+            indexes = Utils.IndexOfAll(NameListEn, name);
             if (indexes.Length > 0)
             {
                 ids = new int[indexes.Length];
                 foreach (int item in indexes)
                 {
-                    ids[pos] = idListEn[item];
+                    ids[pos] = IdListEn[item];
                     pos++;
                 }
                 return ids;
             }
 
-            return new int[0];
+            return Array.Empty<int>();
         }
 
         public string GetIdPath()
@@ -159,20 +163,20 @@ namespace perfmon_explorer.PerfMon
             return path;
         }
 
-        private static string GetName(int id)
+        private static string? GetName(int id)
         {
-            int idx = Array.IndexOf(idListLang, id);
+            int idx = Array.IndexOf(IdListLang, id);
             if (idx != -1)
-                return nameListLang[idx];
+                return NameListLang[idx];
 
-            idx = Array.IndexOf(idListEn, id);
+            idx = Array.IndexOf(IdListEn, id);
             if (idx != -1)
-                return nameListEn[idx];
+                return NameListEn[idx];
 
             return null;
         }
 
-        private int GetNearestCounterId(int[] ids)
+        private int GetNearestCounterId(int[]? ids)
         {
             if (ids == null ||
                 CategoryId == 0 ||

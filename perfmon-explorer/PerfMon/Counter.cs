@@ -26,7 +26,7 @@ namespace perfmon_explorer.PerfMon
 {
     internal class Counter : IComparable
     {
-        private PerformanceCounter perfCount;
+        private readonly PerformanceCounter perfCount;
 
         internal Counter(PerformanceCounter inner)
         {
@@ -38,7 +38,7 @@ namespace perfmon_explorer.PerfMon
             get { return perfCount.RawValue; }
         }
 
-        public string Help
+        public string? Help
         {
             get
             {
@@ -63,9 +63,9 @@ namespace perfmon_explorer.PerfMon
             return perfCount.CounterName;
         }
 
-        int IComparable.CompareTo(object obj)
+        int IComparable.CompareTo(object? obj)
         {
-            return string.CompareOrdinal(ToString(), obj.ToString());
+            return string.CompareOrdinal(ToString(), obj?.ToString());
         }
     }
 }
