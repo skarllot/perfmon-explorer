@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,8 +25,7 @@ namespace perfmon_explorer
         private async void MainWindow_OnLoaded(object sender, EventArgs e)
         {
             var categories = await LoadingWindow.AwaitResult(this, PerfMon.Category.GetCategoriesAsync());
-            Array.Sort(categories);
-            lstCategory.Items.AddRange(categories);
+            lstCategory.Items.AddRange(categories.OrderBy(it => it.ToString(), StringComparer.Ordinal));
         }
 
         private async void LstCategory_OnSelected(object sender, RoutedEventArgs e)
@@ -53,8 +53,7 @@ namespace perfmon_explorer
             if (lstInstances.Items.Count == 0)
             {
                 var counters = await LoadingWindow.AwaitResult(this, cat.GetCountersAsync(null));
-                Array.Sort(counters);
-                lstCounters.Items.AddRange(counters);
+                lstCounters.Items.AddRange(counters.OrderBy(it => it.ToString(), StringComparer.Ordinal));
             }
 
             counterPath = new PerfMon.CounterPath();
@@ -80,8 +79,7 @@ namespace perfmon_explorer
             string instance = (string)lstInstances.SelectedItem;
 
             var counters = await LoadingWindow.AwaitResult(this, cat.GetCountersAsync(instance));
-            Array.Sort(counters);
-            lstCounters.Items.AddRange(counters);
+            lstCounters.Items.AddRange(counters.OrderBy(it => it.ToString(), StringComparer.Ordinal));
 
             counterPath.InstanceName = instance;
             counterPath.CounterId = -1;

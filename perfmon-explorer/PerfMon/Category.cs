@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,12 +51,12 @@ namespace perfmon_explorer.PerfMon
             }
         }
 
-        public static Task<Category[]> GetCategoriesAsync()
+        public static Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             return Task.Run(GetCategories);
         }
 
-        public Task<Counter[]> GetCountersAsync(string instance)
+        public Task<IEnumerable<Counter>> GetCountersAsync(string instance)
         {
             return Task.Run(() => GetCounters(instance));
         }
@@ -65,18 +66,16 @@ namespace perfmon_explorer.PerfMon
             return Task.Run(GetInstancesNames);
         }
 
-        private static Category[] GetCategories()
+        private static IEnumerable<Category> GetCategories()
         {
             return PerformanceCounterCategory.GetCategories()
-                .Select(static it => new Category(it))
-                .ToArray();
+                .Select(static it => new Category(it));
         }
 
-        private Counter[] GetCounters(string instance)
+        private IEnumerable<Counter> GetCounters(string instance)
         {
             return perfCat.GetCounters(instance ?? "")
-                .Select(static it => new Counter(it))
-                .ToArray();
+                .Select(static it => new Counter(it));
         }
 
         private string[] GetInstancesNames()
