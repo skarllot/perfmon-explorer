@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shell;
 
 namespace perfmon_explorer
 {
@@ -24,7 +26,8 @@ namespace perfmon_explorer
 
         private async void MainWindow_OnLoaded(object sender, EventArgs e)
         {
-            var categories = await LoadingWindow.AwaitResult(this, PerfMon.Category.GetCategoriesAsync());
+            var categories = await PerfMon.Category.GetCategoriesAsync();
+            SetLoadingStatus(false);
             lstCategory.Items.AddRange(categories.OrderBy(it => it.ToString(), StringComparer.Ordinal));
         }
 
@@ -34,6 +37,7 @@ namespace perfmon_explorer
                 lstCategory.SelectedIndex == lastIdxCategory)
                 return;
 
+            SetLoadingStatus(true);
             lastIdxCategory = lstCategory.SelectedIndex;
             lastIdxInstance = -1;
             lastIdxCounter = -1;
@@ -45,21 +49,21 @@ namespace perfmon_explorer
 
             var cat = (PerfMon.Category)lstCategory.SelectedItem;
 
-            var instances = await LoadingWindow.AwaitResult(this, cat.GetInstancesNamesAsync());
-            Array.Sort(instances);
-            lstInstances.Items.AddRange(instances);
+            var instances = await cat.GetInstancesNamesAsync();
+            lstInstances.Items.AddRange(instances.OrderBy(static it => it, StringComparer.Ordinal));
             txtHelpCategory.Text = cat.Help;
 
             if (lstInstances.Items.Count == 0)
             {
-                var counters = await LoadingWindow.AwaitResult(this, cat.GetCountersAsync(null));
-                lstCounters.Items.AddRange(counters.OrderBy(it => it.ToString(), StringComparer.Ordinal));
+                var counters = await cat.GetCountersAsync(null);
+                lstCounters.Items.AddRange(counters.OrderBy(static it => it.ToString(), StringComparer.Ordinal));
             }
 
             counterPath = new PerfMon.CounterPath();
             counterPath.CategoryName = cat.ToString();
             txtPath.Text = counterPath.GetPath();
             txtZabbixPath.Text = counterPath.GetIdPath();
+            SetLoadingStatus(false);
         }
 
         private async void LstInstances_OnSelected(object sender, RoutedEventArgs e)
@@ -68,6 +72,7 @@ namespace perfmon_explorer
                 lstInstances.SelectedIndex == lastIdxInstance)
                 return;
 
+            SetLoadingStatus(true);
             lastIdxInstance = lstInstances.SelectedIndex;
             lastIdxCounter = -1;
             lstCounters.Items.Clear();
@@ -78,13 +83,14 @@ namespace perfmon_explorer
             var cat = (PerfMon.Category)lstCategory.SelectedItem;
             string instance = (string)lstInstances.SelectedItem;
 
-            var counters = await LoadingWindow.AwaitResult(this, cat.GetCountersAsync(instance));
-            lstCounters.Items.AddRange(counters.OrderBy(it => it.ToString(), StringComparer.Ordinal));
+            var counters = await cat.GetCountersAsync(instance);
+            lstCounters.Items.AddRange(counters.OrderBy(static it => it.ToString(), StringComparer.Ordinal));
 
             counterPath.InstanceName = instance;
             counterPath.CounterId = -1;
             txtPath.Text = counterPath.GetPath();
             txtZabbixPath.Text = counterPath.GetIdPath();
+            SetLoadingStatus(false);
         }
 
         private void LstCounters_OnSelected(object sender, RoutedEventArgs e)
@@ -113,18 +119,34 @@ namespace perfmon_explorer
         private void BtnGetValue_OnClick(object sender, RoutedEventArgs e)
         {
             var counter = (PerfMon.Counter)lstCounters.SelectedItem;
-            float? nValue = float.NaN;
-            long? rValue = long.MinValue;
+            float nValue = float.NaN;
+            long rValue = long.MinValue;
 
             try { nValue = counter.NextValue(); }
-            catch { }
+            catch { /* Ignore exceptions */ }
             try { rValue = counter.RawValue; }
-            catch { }
+            catch { /* Ignore exceptions */ }
 
-            string item = string.Format("{0} (Raw: {1})",
-                nValue.ToString(),
-                rValue == long.MinValue ? "NaN" : rValue.ToString());
+            var item = string.Format("{0} (Raw: {1})",
+                nValue.ToString(CultureInfo.InvariantCulture),
+                rValue == long.MinValue ? "NaN" : rValue.ToString(CultureInfo.InvariantCulture));
             lstValue.Items.Insert(0, item);
+        }
+
+        private void SetLoadingStatus(bool isLoading)
+        {
+            if (isLoading)
+            {
+                IsEnabled = false;
+                TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+                LoadingProgressBar.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                IsEnabled = true;
+                TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                LoadingProgressBar.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

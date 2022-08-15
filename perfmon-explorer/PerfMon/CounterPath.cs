@@ -21,6 +21,7 @@
 
 using Microsoft.Win32;
 using System;
+using System.Text;
 
 namespace perfmon_explorer.PerfMon
 {
@@ -200,18 +201,18 @@ namespace perfmon_explorer.PerfMon
 
         public string GetPath()
         {
-            string path = string.Empty;
+            var pathBuilder = new StringBuilder();
 
             if (CategoryId > 0)
             {
-                path = "\\" + CategoryName;
+                pathBuilder.AppendFormat("\\{0}", CategoryName);
                 if (InstanceName != null)
-                    path += "(" + InstanceName + ")";
+                    pathBuilder.AppendFormat("({0})", InstanceName);
                 if (CounterId > 0)
-                    path += "\\" + CounterName;
+                    pathBuilder.AppendFormat("\\{0}", CounterName);
             }
 
-            return path;
+            return pathBuilder.ToString();
         }
 
         public override string ToString()
