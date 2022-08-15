@@ -3,6 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "perfmon-explorer", "perfmon-explorer\perfmon-explorer.csproj", "{6DB08431-C6C4-4AFC-9138-CD30C29305DD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{076D1721-AF46-49A9-93BE-0790FAC1AB6F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
