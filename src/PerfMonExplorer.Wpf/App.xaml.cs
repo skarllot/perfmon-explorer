@@ -1,6 +1,5 @@
-﻿namespace PerfMonExplorer.Wpf
+﻿namespace PerfMonExplorer.Wpf;
+
+public partial class App
 {
-    public partial class App
-    {
-    }
 }
