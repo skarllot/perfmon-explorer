@@ -16,7 +16,6 @@ public struct CounterPath
     {
         int pos = 0;
 
-        // TODO: Heavy test both keys
         var regKey = Registry.LocalMachine.OpenSubKey(KeyPerflibDefault);
         if (regKey is null) return;
 

@@ -19,7 +19,7 @@ public static class Utils
 
     public static void AddRange(this IList collection, IEnumerable<object> items)
     {
-        foreach (var item in items)
+        foreach (object item in items)
         {
             collection.Add(item);
         }

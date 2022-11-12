@@ -1,30 +1,18 @@
 ﻿using System.Diagnostics;
+using LanguageExt;
 
 namespace PerfMonExplorer;
 
 public class Category : IComparable
 {
-    private readonly PerformanceCounterCategory perfCat;
+    private readonly PerformanceCounterCategory _perfCat;
 
     private Category(PerformanceCounterCategory inner)
     {
-        perfCat = inner;
+        _perfCat = inner;
     }
 
-    public string? Help
-    {
-        get
-        {
-            try
-            {
-                return perfCat.CategoryHelp;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-    }
+    public Try<string> Help => () => _perfCat.CategoryHelp;
 
     public static Task<IEnumerable<Category>> GetCategoriesAsync()
     {
@@ -49,22 +37,22 @@ public class Category : IComparable
 
     private IEnumerable<Counter> GetCounters(string? instance)
     {
-        return perfCat.GetCounters(instance ?? "")
+        return _perfCat.GetCounters(instance ?? "")
             .Select(static it => new Counter(it));
     }
 
     private string[] GetInstancesNames()
     {
-        return perfCat.GetInstanceNames();
+        return _perfCat.GetInstanceNames();
     }
 
     public override string ToString()
     {
-        return perfCat.CategoryName;
+        return _perfCat.CategoryName;
     }
 
     int IComparable.CompareTo(object? obj)
     {
-        return string.CompareOrdinal(perfCat.CategoryName, obj?.ToString());
+        return string.CompareOrdinal(_perfCat.CategoryName, obj?.ToString());
     }
 }

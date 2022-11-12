@@ -1,44 +1,29 @@
 ﻿using System.Diagnostics;
+using LanguageExt;
 
 namespace PerfMonExplorer;
 
 public class Counter : IComparable
 {
-    private readonly PerformanceCounter perfCount;
+    private readonly PerformanceCounter _perfCount;
 
     internal Counter(PerformanceCounter inner)
     {
-        perfCount = inner;
+        _perfCount = inner;
     }
 
-    public long RawValue
-    {
-        get { return perfCount.RawValue; }
-    }
+    public long RawValue => _perfCount.RawValue;
 
-    public string? Help
-    {
-        get
-        {
-            try
-            {
-                return perfCount.CounterHelp;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-    }
+    public Try<string> Help => () => _perfCount.CounterHelp;
 
     public float NextValue()
     {
-        return perfCount.NextValue();
+        return _perfCount.NextValue();
     }
 
     public override string ToString()
     {
-        return perfCount.CounterName;
+        return _perfCount.CounterName;
     }
 
     int IComparable.CompareTo(object? obj)
