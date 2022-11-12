@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace perfmon_explorer.PerfMon
 {
-    internal class Category : IComparable
+    public class Category : IComparable
     {
         private readonly PerformanceCounterCategory perfCat;
 

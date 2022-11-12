@@ -4,7 +4,7 @@ using System.Text;
 
 namespace perfmon_explorer.PerfMon
 {
-    internal struct CounterPath
+    public struct CounterPath
     {
         private const string KeyPerflibCurlang = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\CurrentLanguage";
         private const string KeyPerflibDefault = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib\009";

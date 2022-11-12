@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System.Collections;
 
 namespace perfmon_explorer
 {
-    internal static class Utils
+    public static class Utils
     {
         public static int[] IndexOfAll<T>(T[] list, T? item)
             where T : IComparable
@@ -19,7 +17,7 @@ namespace perfmon_explorer
             return indexes.ToArray();
         }
 
-        public static void AddRange(this ItemCollection collection, IEnumerable<object> items)
+        public static void AddRange(this IList collection, IEnumerable<object> items)
         {
             foreach (var item in items)
             {

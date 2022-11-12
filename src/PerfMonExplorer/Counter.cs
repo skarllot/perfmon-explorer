@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace perfmon_explorer.PerfMon
 {
-    internal class Counter : IComparable
+    public class Counter : IComparable
     {
         private readonly PerformanceCounter perfCount;
 
