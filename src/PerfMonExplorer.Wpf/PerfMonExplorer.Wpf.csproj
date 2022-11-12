@@ -6,7 +6,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWpf>true</UseWpf>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>perfmon_explorer</RootNamespace>
+    <AssemblyName>perfmon-explorer</AssemblyName>
     <Description>Refer to https://github.com/skarllot/perfmon-explorer</Description>
     <Copyright>2022 (c) Fabrício Godoy</Copyright>
     <SupportUrl>https://github.com/skarllot/perfmon-explorer/issues</SupportUrl>

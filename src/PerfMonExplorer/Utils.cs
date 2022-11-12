@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace perfmon_explorer
+namespace PerfMonExplorer
 {
     public static class Utils
     {

@@ -1,7 +1,7 @@
-﻿using Microsoft.Win32;
-using System.Text;
+﻿using System.Text;
+using Microsoft.Win32;
 
-namespace perfmon_explorer.PerfMon
+namespace PerfMonExplorer
 {
     public struct CounterPath
     {

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace perfmon_explorer.PerfMon
+namespace PerfMonExplorer
 {
     public class Category : IComparable
     {

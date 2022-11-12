@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shell;
 
-namespace perfmon_explorer
+namespace PerfMonExplorer.Wpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -17,7 +17,7 @@ namespace perfmon_explorer
         private int lastIdxInstance = -1;
         private int lastIdxCounter = -1;
 
-        private PerfMon.CounterPath counterPath;
+        private CounterPath counterPath;
 
         public MainWindow()
         {
@@ -26,7 +26,7 @@ namespace perfmon_explorer
 
         private async void MainWindow_OnLoaded(object sender, EventArgs e)
         {
-            var categories = await PerfMon.Category.GetCategoriesAsync();
+            var categories = await Category.GetCategoriesAsync();
             SetLoadingStatus(false);
             lstCategory.Items.AddRange(categories.OrderBy(it => it.ToString(), StringComparer.Ordinal));
         }
@@ -47,7 +47,7 @@ namespace perfmon_explorer
             btnGetValue.IsEnabled = false;
             lstValue.Items.Clear();
 
-            var cat = (PerfMon.Category)lstCategory.SelectedItem;
+            var cat = (Category)lstCategory.SelectedItem;
 
             var instances = await cat.GetInstancesNamesAsync();
             lstInstances.Items.AddRange(instances.OrderBy(static it => it, StringComparer.Ordinal));
@@ -59,7 +59,7 @@ namespace perfmon_explorer
                 lstCounters.Items.AddRange(counters.OrderBy(static it => it.ToString(), StringComparer.Ordinal));
             }
 
-            counterPath = new PerfMon.CounterPath();
+            counterPath = new CounterPath();
             counterPath.CategoryName = cat.ToString();
             txtPath.Text = counterPath.GetPath();
             txtZabbixPath.Text = counterPath.GetIdPath();
@@ -80,7 +80,7 @@ namespace perfmon_explorer
             btnGetValue.IsEnabled = false;
             lstValue.Items.Clear();
 
-            var cat = (PerfMon.Category)lstCategory.SelectedItem;
+            var cat = (Category)lstCategory.SelectedItem;
             string instance = (string)lstInstances.SelectedItem;
 
             var counters = await cat.GetCountersAsync(instance);
@@ -100,7 +100,7 @@ namespace perfmon_explorer
                 return;
 
             lastIdxCounter = lstCounters.SelectedIndex;
-            var counter = (PerfMon.Counter)lstCounters.SelectedItem;
+            var counter = (Counter)lstCounters.SelectedItem;
             txtHelpCounter.Text = counter.Help;
 
             btnGetValue.IsEnabled = true;
@@ -118,7 +118,7 @@ namespace perfmon_explorer
 
         private void BtnGetValue_OnClick(object sender, RoutedEventArgs e)
         {
-            var counter = (PerfMon.Counter)lstCounters.SelectedItem;
+            var counter = (Counter)lstCounters.SelectedItem;
             float nValue = float.NaN;
             long rValue = long.MinValue;
 
