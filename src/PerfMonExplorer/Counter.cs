@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+using Gobie;
 using LanguageExt;
 
 namespace PerfMonExplorer;
 
-public class Counter : IComparable
+[ComparableOperators]
+public sealed partial class Counter : IComparable<Counter>, IEquatable<Counter>
 {
     private readonly PerformanceCounter _perfCount;
 
@@ -26,8 +28,13 @@ public class Counter : IComparable
         return _perfCount.CounterName;
     }
 
-    int IComparable.CompareTo(object? obj)
+    public int CompareTo(Counter? other)
     {
-        return string.CompareOrdinal(ToString(), obj?.ToString());
+        return other is not null ? string.CompareOrdinal(_perfCount.CounterName, other._perfCount.CounterName) : 1;
+    }
+
+    public override int GetHashCode()
+    {
+        return StringComparer.Ordinal.GetHashCode(_perfCount.CounterName);
     }
 }

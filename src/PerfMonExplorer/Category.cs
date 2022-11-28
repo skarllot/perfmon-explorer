@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+using Gobie;
 using LanguageExt;
 
 namespace PerfMonExplorer;
 
-public class Category : IComparable
+[ComparableOperators]
+public sealed partial class Category : IComparable<Category>, IEquatable<Category>
 {
     private readonly PerformanceCounterCategory _perfCat;
 
@@ -51,8 +53,13 @@ public class Category : IComparable
         return _perfCat.CategoryName;
     }
 
-    int IComparable.CompareTo(object? obj)
+    public int CompareTo(Category? other)
     {
-        return string.CompareOrdinal(_perfCat.CategoryName, obj?.ToString());
+        return other is not null ? string.CompareOrdinal(_perfCat.CategoryName, other._perfCat.CategoryName) : 1;
+    }
+
+    public override int GetHashCode()
+    {
+        return StringComparer.Ordinal.GetHashCode(_perfCat.CategoryName);
     }
 }
