@@ -1,22 +1,17 @@
-PERFMON-EXPLORER
-================
+# Performance Monitor Analyser
 
-Explorer for Microsoft Performance Monitor (Zabbix friendly)
+Explorer for Microsoft Windows NT Performance Monitor. Provides counter path (Zabbix friendly), description and allows to get instant value.
 
+![](docs/perfmon-explorer-window.png)
 
-Installation
-============
+## Installation
 
-- Don't need installation, just run it.
-
-
-How to report bugs
-==================
-
-Bugs should be reported in https://github.com/skarllot/perfmon-explorer/issues page.
+Don't need installation, just run it.
 
 
-Contact
-=======
+## Contributing
 
-Fabrício Godoy <skarllot@gmail.com>
+We are always open to contributions from developers and users. If you have suggestions, bug reports, or want to contribute code, please file an issue or pull request on our GitHub repository.
+
+## Licença
+This software is distributed under GNU GPL v3 license. For more information, read [LICENSE](./LICENSE) file.
