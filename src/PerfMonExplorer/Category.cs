@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics;
-using Gobie;
 using LanguageExt;
 
 namespace PerfMonExplorer;
 
-[ComparableOperators]
-public sealed partial class Category : IComparable<Category>, IEquatable<Category>
+public sealed class Category : IComparable<Category>, IEquatable<Category>
 {
     private readonly PerformanceCounterCategory _perfCat;
 
@@ -13,6 +11,13 @@ public sealed partial class Category : IComparable<Category>, IEquatable<Categor
     {
         _perfCat = inner;
     }
+
+    public static bool operator <(Category? left, Category? right) => Compare(left, right) < 0;
+    public static bool operator >(Category? left, Category? right) => Compare(left, right) > 0;
+    public static bool operator <=(Category? left, Category? right) => Compare(left, right) <= 0;
+    public static bool operator >=(Category? left, Category? right) => Compare(left, right) >= 0;
+    public static bool operator ==(Category? left, Category? right) => Compare(left, right) == 0;
+    public static bool operator !=(Category? left, Category? right) => Compare(left, right) != 0;
 
     public Try<string> Help => () => _perfCat.CategoryHelp;
 
@@ -53,13 +58,34 @@ public sealed partial class Category : IComparable<Category>, IEquatable<Categor
         return _perfCat.CategoryName;
     }
 
+    public override int GetHashCode()
+    {
+        return StringComparer.Ordinal.GetHashCode(_perfCat.CategoryName);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return 1;
+        if (ReferenceEquals(this, obj)) return 0;
+        return obj is Category other ? CompareTo(other) : throw new ArgumentException($"Object must be of type {nameof(Category)}");
+    }
+
     public int CompareTo(Category? other)
     {
         return other is not null ? string.CompareOrdinal(_perfCat.CategoryName, other._perfCat.CategoryName) : 1;
     }
 
-    public override int GetHashCode()
+    public bool Equals(Category? other) => CompareTo(other) == 0;
+
+    public override bool Equals(object? obj)
     {
-        return StringComparer.Ordinal.GetHashCode(_perfCat.CategoryName);
+        return obj is Category other ? Equals(other) : throw new ArgumentException($"Object must be of type {nameof(Category)}");
+    }
+
+    private static int Compare(Category? left, Category? right)
+    {
+        if (ReferenceEquals(left, right)) return 0;
+        if (left is null) return -1;
+        return left.CompareTo(right);
     }
 }
